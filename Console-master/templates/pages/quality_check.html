@@ -1,0 +1,441 @@
+{% include "layouts/header.html" %}
+{% load static %}
+
+<style>
+    #video{
+        -webkit-transform:  translateY(-100%) rotate(0deg) ;
+        transform:  translateY(-100%) rotate(180deg);
+        -webkit-transform-origin: left bottom;
+        transform-origin: left bottom;
+        margin-left: 100%;
+    }
+    #preview_imgs_div{
+        -webkit-transform:  translateY(-100%) rotate(180deg) ;
+        transform:  translateY(-100%) rotate(180deg);
+        -webkit-transform-origin: left bottom;
+        transform-origin: left bottom;
+        /* float: right; */
+        margin-left: 100%;
+        width: 100%;
+    }
+</style>
+<div class="row">
+
+    <div class="col-sm-7">
+
+        <div class="row">
+
+            <div class="col-sm-12">
+
+                <form method="POST" id="img_acq_form" enctype="multipart/form-data" style="background-color: #ddd; border: 3px solid #000;">
+                    
+                    {% csrf_token %}
+
+                    <video style="width:100%; height: 395px; display: none;" id="video" autoplay playsinline></video>
+                    <img style="width:100%; height: 395px;" id="camera_img" src="{% static 'images/camera.png' %}"></video>
+                    <input type="hidden" id="img_value" name="img_value">
+
+                </form> 
+
+            </div>
+
+            <div class="col-sm-12 mb-3"></div>
+
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <div class="input-group mb-3">
+                        <select class="form-control" style="width: 100%;" id="inputGroupSelect01">
+                            <option selected>Choose Bottle Type...</option>
+                            <option value="1">Pantene</option>
+                            <option value="2">Head & Shoulders</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="col-sm-4">
+                <div class="form-group">
+                    <div class="input-group mb-3">
+                        <select class="form-control" style="width: 100%;" id="bottle_size">
+                            <!-- <option selected>Choose Bottle Size...</option> -->
+                            <!-- <option value="1">Small</option> -->
+                            <option value="md">Medium</option>
+                            <option value="lg">Large</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="col-sm-4">
+                <button onclick="captureImage(this)" type="button" name="submit" class="btn btn-primary btn-block">Inspect</button>
+            </div>
+
+
+
+        </div>
+
+    </div>
+
+    <div class="col-sm-5">
+
+        <div class="row">
+
+            <div class="col-sm-12" style="">
+                <img style="width: 100%;" src="{% static 'images/ss_poster.png' %}">
+            </div>
+
+            <div class="col-sm-12 mb-3"></div>
+
+            <div class="col-sm-12" >
+                <div class="form-group">
+                    <div class="input-group mb-3">
+                        <select class="form-control" style="width: 100%;" id="selectCam">
+                        
+                        </select>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <div class="input-group mb-3">
+                        <button onclick="start_cam()" class="btn btn-primary btn-block">Start Camera</button>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="col-sm-6">
+                <div class="form-group">
+                    <div class="input-group mb-3">
+                        <button onclick="stop_cam()" class="btn btn-primary btn-block">Stop Camera</button>
+                    </div>
+                </div>
+            </div>
+        
+            <div class="col-sm-12" style="display: none;">
+                <div class="form-group">
+                    <div class="input-group mb-3">
+                        <button onclick="location.reload();" class="btn btn-danger btn-block">Restart</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-12 mb-3">
+                <div class="form-group" style="padding: 10px; color: #f00; border: 3px solid #f00;"><div class="input-group mb-3">
+                <p><b>Instructions</b></p>
+                <ul>
+                    <li>Select which camera to open from above dropdown. Then click "Start Camera" button.</li>
+                    <li>Do not forget to select the size and type of bottle from the dropdown on bottom left.</li>
+                </ul>
+                </div></div>
+            </div>
+
+        </div>
+
+    </div>
+
+    
+    <div class="col-sm-12">
+        <div class="row" id="preview_imgs_div">
+
+        </div>
+    </div>
+
+
+</div>
+
+{% include "pages/results_modal.html" %}
+
+<script>
+
+let currentStream;
+const video = document.getElementById('video');
+const select = document.getElementById('selectCam');
+
+function gotDevices(mediaDevices) {
+    select.innerHTML = '<option>Choose Camera...</ option >';
+    select.appendChild(document.createElement('option'));
+    let count = 1;
+    mediaDevices.forEach(mediaDevice => {
+    if (mediaDevice.kind === 'videoinput') {
+        const label = mediaDevice.label || `Camera ${count++}`;
+
+        if (label != '') {
+            const option = document.createElement('option');
+            option.value = mediaDevice.deviceId;
+
+            if(!label.includes("Webcam")){
+                option.selected = true;
+            }
+
+            // console.log(label);
+
+            const textNode = document.createTextNode(label);
+            option.appendChild(textNode);
+            select.appendChild(option);
+        }
+    }
+    });
+}
+
+
+
+function captureImage(obj) {
+
+    //place_temp_imgs_in_preview_div();
+
+    // obj.disabled = true;
+    //align_camera();
+    //setTimeout(align_motor.bind(null,obj),6000);
+    
+    const video = document.getElementById('video');
+
+            const canvas = document.createElement("canvas");
+
+            // scale the canvas accordingly
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            console.log("width: "+canvas.width+" , height: "+ canvas.height)
+
+            // draw the video at that frame
+            canvas.getContext('2d').drawImage(video, 0, 0, 224, 224);
+
+            // convert it to a usable data URL
+            const dataURL = canvas.toDataURL();
+    
+    $.ajaxSetup({
+        data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+    });
+    $.ajax({
+        type: 'POST',
+        url: "{% url 'img_model_inspect' %}",
+        data: {"img": dataURL},
+        success: (response) => {
+            
+            //$('#result_modal_body').html(response);
+            //$('#modal-result').modal('toggle');
+            
+            alert(response.defect_result);
+
+        },
+        error: function (response) {
+            // alert(response["responseJSON"]["error"]);
+            // $('#loader').modal('hide');
+        }
+    });
+    
+    
+
+
+
+}
+
+function align_motor(obj){
+    document.getElementById("img_0").style.display="block";
+    for(var i = 0; i < 4; i++){
+
+        setTimeout(place_img.bind(null, obj, i), 3000*i);
+
+    }
+}
+
+function align_camera() {
+
+    var bottle_size = $("#bottle_size").val();
+
+    $.ajaxSetup({
+        data: { csrfmiddlewaretoken: '{{ csrf_token }}' },
+    });
+    $.ajax({
+        type: 'POST',
+        data:{"bottle_size":bottle_size},
+        url: "{% url 'align_camera' %}",
+        success: function (response) {
+                console.log(response)
+            }
+        ,
+        error: function (response) {
+            alert(response["responseJSON"]["error"]);
+            // $('#loader').modal('hide');
+        }
+    });
+
+
+}
+
+
+
+function place_temp_imgs_in_preview_div(){
+    var src = "{% static 'images/loader_img.gif' %}";
+
+    $("#preview_imgs_div").html('');
+    $("#preview_imgs_div").append('<div class="col-sm-3" id=""><img style="width:100%; height:250px; display: none;" id="img_0" src="'+src+'"></div>');
+    $("#preview_imgs_div").append('<div class="col-sm-3" id=""><img style="width:100%; height:250px; display: none;" id="img_1" src="'+src+'"></div>');
+    $("#preview_imgs_div").append('<div class="col-sm-3" id=""><img style="width:100%; height:250px; display: none;" id="img_2" src="'+src+'"></div>');
+    $("#preview_imgs_div").append('<div class="col-sm-3" id=""><img style="width:100%; height:250px; display: none;" id="img_3" src="'+src+'"></div>');
+}
+
+$( document ).ready(function() {
+    place_temp_imgs_in_preview_div();
+});
+
+function place_img(obj, i){
+
+    $.ajaxSetup({
+        data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+    });
+    $.ajax({
+        type: 'POST',
+        url: "{% url 'rotate_motor' %}",
+        success: function (response) {
+            const video = document.getElementById('video');
+
+            const canvas = document.createElement("canvas");
+
+            // scale the canvas accordingly
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+
+            console.log("width: "+canvas.width+" , height: "+ canvas.height)
+
+            // draw the video at that frame
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            // convert it to a usable data URL
+            const dataURL = canvas.toDataURL();
+            // img_display.src = dataURL;
+
+            // download(dataURL, "image_"+i+".png");
+
+            save_pic_on_backend(dataURL, i);
+
+            // add base64 format of captured image to form data
+            document.getElementById("img_value").value = dataURL;
+
+            document.getElementById("img_"+i).src = dataURL;
+            if(i<3){
+                document.getElementById("img_"+(i+1)).style.display="block";
+            }
+            if(i == 3){
+                obj.disabled = false;
+                
+                inspect();
+
+            }
+        },
+        error: function (response) {
+            // alert(response["responseJSON"]["error"]);
+            // $('#loader').modal('hide');
+        }
+    });
+    
+    
+}
+
+function inspect(){
+    var bottle_size = $("#bottle_size").val();
+    $.ajaxSetup({
+        data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+    });
+    $.ajax({
+        type: 'POST',
+        url: "{% url 'inspect' %}",
+        data: {"bottle_size" : bottle_size},
+        success: function (response) {
+            $('#result_modal_body').html(response);
+            $('#modal-result').modal('toggle');
+        },
+        error: function (response) {
+            // alert(response["responseJSON"]["error"]);
+            // $('#loader').modal('hide');
+            // $('#modal-result').modal('toggle');
+        }
+    });
+}
+
+function save_pic_on_backend(img_dataUrl, i){
+    $.ajaxSetup({
+        data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+    });
+    $.ajax({
+        type: 'POST',
+        url: "{% url 'save_img_on_server' %}",
+        data: {"img_dataUrl" : img_dataUrl, "i" : i},
+        success: function (response) {
+        },
+        error: function (response) {
+            // alert(response["responseJSON"]["error"]);
+            // $('#loader').modal('hide');
+        }
+    });
+}
+
+
+function download(dataurl, filename) {
+  const link = document.createElement("a");
+  link.href = dataurl;
+  link.download = filename;
+  link.click();
+}
+
+
+
+function stopMediaTracks(stream) {
+    stream.getTracks().forEach(track => {
+    track.stop();
+    });
+}
+
+
+function start_cam() {
+
+    // stop current stream if exists
+    if (typeof currentStream !== 'undefined') {
+        stopMediaTracks(currentStream);
+    }
+
+    // define media constraints, select media device
+    const videoConstraints = {
+        width : {ideal:10000},
+        height : {ideal:10000}
+    };
+    if (select.value === '') {
+    videoConstraints.facingMode = 'environment';
+    } else {
+    videoConstraints.deviceId = { exact: select.value };
+    }
+    const constraints = {
+    video: videoConstraints,
+    audio: false
+    };
+
+    // start stream
+    navigator.mediaDevices
+    .getUserMedia(constraints)
+    .then(stream => {
+        currentStream = stream;
+        video.srcObject = stream;
+        document.getElementById("video").style.display = "block";
+        document.getElementById("camera_img").style.display = "none";
+        return navigator.mediaDevices.enumerateDevices();
+    })
+    .then(gotDevices)
+    .catch(error => {
+        console.error(error);
+    });
+};
+
+
+function stop_cam() {
+    document.getElementById("video").style.display = "none";
+    document.getElementById("camera_img").style.display = "block";
+    if (typeof currentStream !== 'undefined') {
+    stopMediaTracks(currentStream);
+    }
+}
+navigator.mediaDevices.enumerateDevices().then(gotDevices);
+
+</script>
+
+{% include "layouts/footer.html" %}

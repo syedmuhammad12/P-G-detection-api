@@ -1,0 +1,280 @@
+a {
+    color: #545AA7;
+    text-decoration: none;
+    background-color: transparent;
+}
+
+
+
+    .nav-sidebar .nav-treeview {
+        display: none;
+        list-style: none;
+        padding: 0;
+        margin-left: 25px;
+    }
+
+    .sidebar-dark-primary .nav-sidebar>.nav-item>.nav-link.active, .sidebar-light-primary .nav-sidebar>.nav-item>.nav-link.active {
+        background-color: rgba(255,255,255,.9);
+        color: #000;
+    }
+
+    [class*=sidebar-dark-] {
+        background-color: #545AA7;
+    }
+
+    .btn-secondary, .btn-secondary:hover {
+      color: #fff;
+      background-color: #545AA7;
+      border-color: #545AA7;
+      box-shadow: none;
+    }
+
+    .card-primary:not(.card-outline)>.card-header {
+        background-color: #545AA7;
+    }
+
+    [class*=sidebar-dark-] .nav-treeview>.nav-item>.nav-link {
+      color: #ffffff;
+    }
+
+    .btn-primary {
+        color: #fff;
+        background-color: #545AA7;
+        border-color: #545AA7;
+        box-shadow: none;
+    }
+
+    .btn-primary:hover {
+        color: #fff;
+        background-color: #545AA7;
+        border-color: #545AA7;
+        box-shadow: none;
+    }
+    .h1, h1 {
+    font-size: 2.5rem;
+    color: #545AA7;
+}
+
+.btn-secondary {
+    color: #fff;
+    background-color: #545AA7;
+    border-color: #545AA7;
+    box-shadow: none;
+}
+
+.h1:hover {
+    font-size: 2.5rem;
+    color: #545AA7;
+}
+
+    .card-primary.card-outline {
+    border-top: 3px solid #545AA7;
+}
+
+    .bg-primary {
+    background-color: #545AA7!important;
+}
+.bg-primary {
+    background-color: #545AA7!important;
+}
+
+    .page-item.active .page-link {
+        z-index: 3;
+        color: #fff;
+        background-color: #545AA7;
+        border-color: #545AA7;
+    }
+
+    [class*=sidebar-dark-] .sidebar a {
+        color: #ffffff;
+    }
+    .nav-pills .nav-link {
+        color: #545AA7;
+    }
+
+    .modals {
+        display:    none;
+        position:   fixed;
+        z-index:    1000;
+        top:        0;
+        left:       0;
+        height:     100%;
+        width:      100%;
+        background: rgba( 255, 255, 255, .8 )
+        url('https://icons8.com/preloaders/preloaders/1494/Spinner-2.gif')
+        50% 50%
+        no-repeat;
+      }
+      body.loading {
+          overflow: hidden;
+      }
+      body.loading .modals {
+          display: block;
+      }
+  
+      body {
+        background-color: #e1e1e1;
+      }
+
+      a{
+        cursor: grabbing;
+      }
+
+      .bg-success {
+        background-color: #545AA7!important;
+        width: 100%;
+    }
+    
+    .bg-danger {
+        background-color: #545AA7!important;
+        width: 100%;
+    }
+
+    .bg-primary {
+        background-color: #545AA7!important;
+        width: 100%;
+    }
+
+    .btn-primary {
+        background-color: #545AA7!important;
+    }
+
+    .bg-success {
+        background-color: #545AA7!important;
+        width: 100%;
+    }
+
+    .dropdown-item.active, .dropdown-item:active {
+        color: #fff;
+        text-decoration: none;
+        background-color: #545AA7;
+    }
+
+
+    .dropdown-item.active:hover, .dropdown-item:active {
+        color: #fff;
+        text-decoration: none;
+        background-color: #545AA7;
+    }
+
+
+    .btn-secondary:hover {
+        color: #fff;
+        background-color: #545AA7;
+        border-color: #545AA7;
+        box-shadow: none;
+    }
+
+
+    .btn-success {
+        background-color: #545AA7!important;
+    }
+
+    [class*=sidebar-dark] .brand-link {
+        border-bottom: 1px solid #fff;
+    }
+
+    .btn-primary {
+        background-color: #545AA7!important;
+        border: 1px solid #545AA7;
+    }
+
+
+    .required:after {
+      content:" *";
+      color: red;
+    }
+
+    .btn-success:hover {
+        color: #fff;
+        background-color: #545AA7;
+        border-color: #545AA7;
+    }
+
+    .btn-success {
+        color: #fff;
+        background-color: #545AA7;
+        border-color: #545AA7;
+        box-shadow: none;
+    }
+
+    #snackbar {
+        visibility: hidden;
+        min-width: 250px;
+        margin-left: -125px;
+        background-color: #000;
+        color: #fff;
+        text-align: center;
+        border-radius: 2px;
+        padding: 16px;
+        position: fixed;
+        z-index: 999999;
+        right: 20px;
+        bottom: 20px;
+        font-size: 17px;
+      }
+      
+      #snackbar.show {
+        visibility: visible;
+        -webkit-animation: fadein 0.5s;
+        animation: fadein 0.5s;
+      }
+      
+      @-webkit-keyframes fadein {
+        from {bottom: 0; opacity: 0;} 
+        to {bottom: 30px; opacity: 1;}
+      }
+      
+      @keyframes fadein {
+        from {bottom: 0; opacity: 0;}
+        to {bottom: 30px; opacity: 1;}
+      }
+      
+      @-webkit-keyframes fadeout {
+        from {bottom: 30px; opacity: 1;} 
+        to {bottom: 0; opacity: 0;}
+      }
+      
+      @keyframes fadeout {
+        from {bottom: 30px; opacity: 1;}
+        to {bottom: 0; opacity: 0;}
+      }
+
+
+      .dataTables_wrapper .dataTables_paginate .paginate_button {
+        box-sizing: border-box;
+        display: inline-block;
+        min-width: 1.5em;
+        padding: 0.5em 1em;
+        /* margin-left: 2px; */
+        text-align: center;
+        text-decoration: none !important;
+        cursor: pointer;
+        *cursor: hand;
+        color: #fff !important;
+        border: 1px solid #545AA7;
+        border-radius: 2px;
+        margin: 0px;
+        padding: 0px;
+        border: 0px;
+    }
+
+    .page-link:hover {
+        /* z-index: 1000; */
+        color: #545AA7;
+        text-decoration: none;
+        background-color: #ffffff;
+        border-color: #ffffff;
+    }
+
+    .page-item:first-child .page-link {
+        margin-left: 1px;
+        border-top-left-radius: 0px;
+        border-radius: 0px;
+        border-bottom-left-radius: 0px;
+    }
+
+    .page-item:last-child .page-link {
+        border-top-right-radius: 0px;
+        border-bottom-right-radius: 0px;
+    }

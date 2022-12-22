@@ -1,0 +1,434 @@
+{% include "layouts/header.html" %}
+
+<div class="row">
+
+    
+
+
+    <div class="col-sm-6">
+      <div class="info-box bg-info" style="background-color: #28a745 !important;">
+          <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
+
+          <div class="info-box-content">
+          <span class="info-box-text">Acceptable</span>
+          <span class="info-box-number">{{ params.count_of_acceptable_bottles }} / {{ params.count_of_total_bottles }}</span>
+
+          <div class="progress">
+              <div class="progress-bar" style="width: {{ params.percentage_of_acceptable_bottles }}%"></div>
+          </div>
+
+          </div>
+          <!-- /.info-box-content -->
+      </div>
+      <!-- /.info-box -->
+    </div>
+
+    
+
+
+    <div class="col-sm-6">
+        <div class="info-box bg-danger" style="background-color: #dc3545 !important;">
+            <span class="info-box-icon"><i class="far fa-bookmark"></i></span>
+
+            <div class="info-box-content">
+            <span class="info-box-text">Unacceptable</span>
+            <span class="info-box-number">{{ params.count_of_unacceptable_bottles }} / {{ params.count_of_total_bottles }}</span>
+
+            <div class="progress">
+                <div class="progress-bar" style="width: {{ params.percentage_of_unacceptable_bottles }}%"></div>
+            </div>
+
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+
+    <div class="col-sm-12">
+      <!-- STACKED BAR CHART -->
+      <div class="card card-success">
+        <div class="card-header" style="background-color: #545AA7 !important;">
+            <h3 class="card-title">Generated Report</h3>
+
+            <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                <i class="fas fa-minus"></i>
+            </button>
+            <button type="button" class="btn btn-tool" data-card-widget="remove">
+                <i class="fas fa-times"></i>
+            </button>
+            </div>
+        </div>
+        <div class="card-body">
+          <form method="GET" action="{% url 'emailEtamuReportView' %}">
+          <div class="row" style="padding: 0px;">
+
+            
+              <div class="col-sm-8">
+                  <div class="form-group">
+                      <div class="input-group">
+                          <label>Email ID</label>
+                      </div>
+                      <div class="input-group mb-3">
+                          <input name="email" class="form-control" id="email" type="email">
+                      </div>
+                  </div>
+              </div>
+
+              <!-- <div class="col-sm-3">
+                <div class="form-group">
+                    <div class="input-group">
+                        <label>.</label>
+                    </div>
+                    <div class="input-group mb-3">
+                        <a href="{% url 'generateEtamuReportView' %}" class="btn btn-primary btn-block">Download PDF</a>
+                    </div>
+                </div>
+              </div> -->
+
+              <div class="col-sm-4">
+                <div class="form-group">
+                    <div class="input-group">
+                        <label style="color: #fff;">.</label>
+                    </div>
+                    <div class="input-group mb-3">
+                        <button type="submit" class="btn btn-primary btn-block">Email Report</button>
+                    </div>
+                </div>
+              </div>
+    
+            </div>
+            </form>
+        </div>
+        <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+
+    
+
+    <div class="col-sm-6">
+
+        <!-- PIE CHART -->
+        <div class="card card-danger">
+            <div class="card-header" style="background-color: #545AA7 !important;">
+                <h3 class="card-title">Inspection Summary</h3>
+
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <canvas id="pieChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+
+    </div>
+
+    <div class="col-sm-6">
+
+        <!-- STACKED BAR CHART -->
+        <div class="card card-success">
+            <div class="card-header" style="background-color: #545AA7 !important;">
+                <h3 class="card-title">Last 6 Months</h3>
+
+                <div class="card-tools">
+                <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button type="button" class="btn btn-tool" data-card-widget="remove">
+                    <i class="fas fa-times"></i>
+                </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="chart">
+                <canvas id="stackedBarChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                </div>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        <!-- /.card -->
+
+    </div>
+
+    <div class="col-sm-12">
+        <div class="card p-0">
+            <div class="card-header" style="background-color: #545AA7 !important; color: #fff;">
+                <h3 class="card-title">Inspection Summary</h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="remove">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Category</th>
+                    <th>No# Of Bottles</th>
+                    <th style="width: 40%">Percentage (%)</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>1.</td>
+                    <td>Acceptable</td>
+                    <td>{{ params.count_of_acceptable_bottles }} / {{ params.count_of_total_bottles }}</td>
+                    <td>
+                        <div class="progress progress-xs">
+                            <div class="progress-bar progress-bar-success" style="width: {{ params.percentage_of_acceptable_bottles }}%; background-color: #28a745 !important;"></div>
+                        </div>    
+                    </td>
+                </tr>
+                <!-- <tr>
+                    <td>2.</td>
+                    <td>Marginal</td>
+                    <td>33</td>
+                    <td>
+                        <div class="progress progress-xs">
+                            <div class="progress-bar progress-bar-warning" style="width: 55%; background-color: #ffc107 !important;"></div>
+                        </div>    
+                    </td>
+                </tr> -->
+                <tr>
+                    <td>2.</td>
+                    <td>Unacceptable</td>
+                    <td>{{ params.count_of_unacceptable_bottles }} / {{ params.count_of_total_bottles }}</td>
+                    <td>
+                        <div class="progress progress-xs">
+                            <div class="progress-bar progress-bar-danger" style="width: {{ params.percentage_of_unacceptable_bottles }}%; background-color: #dc3545 !important;"></div>
+                        </div>    
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+{% include "layouts/footer.html" %}
+
+<script>
+
+  // function emailReport(){
+  //   // $('#loader').modal('toggle');
+  //   var start_date = $("#email_report_start_date").val(); 
+  //   var end_date = $("#email_report_end_date").val(); 
+
+  //   $.ajaxSetup({
+  //       data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+  //   });
+  //   $.ajax({
+  //       type: 'GET',
+  //       url: "{% url 'emailEtamuReportView' %}",
+  //       data: {"start_date": start_date, "end_date": end_date},
+  //       success: function (response) {
+  //         // $('#result_modal_body').html(response);
+  //         // $('#modal-result').modal('toggle');
+  //         location.reload();
+  //       },
+  //       error: function (response) {
+  //           // alert(response["responseJSON"]["error"]);
+  //           // $('#loader').modal('hide');
+  //           // $('#loader').modal('hide');
+  //       }
+  //   });
+  // }
+
+</script>
+<script>
+    $(function () {
+      /* ChartJS
+       * -------
+       * Here we will create a few charts using ChartJS
+       */
+  
+      //--------------
+      //- AREA CHART -
+      //--------------
+  
+      // Get context with jQuery - using jQuery's .get() method.
+    //   var areaChartCanvas = $('#areaChart').get(0).getContext('2d')
+  
+      var areaChartData = {
+        labels  : [{% for month in params.last_6_months_data %} "{{month}}", {% endfor %}],
+        datasets: [
+          {
+            label               : 'Acceptable',
+            backgroundColor     : 'rgba(60,141,188,0.9)',
+            borderColor         : 'rgba(60,141,188,0.8)',
+            pointRadius          : false,
+            pointColor          : '#3b8bba',
+            pointStrokeColor    : 'rgba(60,141,188,1)',
+            pointHighlightFill  : '#fff',
+            pointHighlightStroke: 'rgba(60,141,188,1)',
+            data                : [{% for key,value in params.last_6_months_data.items %} {{value.acceptable}}, {% endfor %}]
+          },
+          {
+            label               : 'Unacceptable',
+            backgroundColor     : 'rgba(210, 214, 222, 1)',
+            borderColor         : 'rgba(210, 214, 222, 1)',
+            pointRadius         : false,
+            pointColor          : 'rgba(210, 214, 222, 1)',
+            pointStrokeColor    : '#c1c7d1',
+            pointHighlightFill  : '#fff',
+            pointHighlightStroke: 'rgba(220,220,220,1)',
+            data                : [{% for key,value in params.last_6_months_data.items %} {{value.unacceptable}}, {% endfor %}]
+          },
+        ]
+      }
+  
+      var areaChartOptions = {
+        maintainAspectRatio : false,
+        responsive : true,
+        legend: {
+          display: false
+        },
+        scales: {
+          xAxes: [{
+            gridLines : {
+              display : false,
+            }
+          }],
+          yAxes: [{
+            gridLines : {
+              display : false,
+            }
+          }]
+        }
+      }
+  
+      // This will get the first returned node in the jQuery collection.
+    //   new Chart(areaChartCanvas, {
+    //     type: 'line',
+    //     data: areaChartData,
+    //     options: areaChartOptions
+    //   })
+  
+      //-------------
+      //- LINE CHART -
+      //--------------
+    //   var lineChartCanvas = $('#lineChart').get(0).getContext('2d')
+      var lineChartOptions = $.extend(true, {}, areaChartOptions)
+      var lineChartData = $.extend(true, {}, areaChartData)
+      lineChartData.datasets[0].fill = false;
+      lineChartData.datasets[1].fill = false;
+      lineChartOptions.datasetFill = false
+  
+    //   var lineChart = new Chart(lineChartCanvas, {
+    //     type: 'line',
+    //     data: lineChartData,
+    //     options: lineChartOptions
+    //   })
+  
+      //-------------
+      //- DONUT CHART -
+      //-------------
+      // Get context with jQuery - using jQuery's .get() method.
+    //   var donutChartCanvas = $('#donutChart').get(0).getContext('2d')
+      var donutData        = {
+        labels: [
+            'Acceptable',
+            'Unacceptable',
+        ],
+        datasets: [
+          {
+            data: [{{ params.count_of_acceptable_bottles }},{{ params.count_of_unacceptable_bottles }}],
+            backgroundColor : ['#00a65a', '#f39c12'],
+          }
+        ]
+      }
+      var donutOptions     = {
+        maintainAspectRatio : false,
+        responsive : true,
+      }
+      //Create pie or douhnut chart
+      // You can switch between pie and douhnut using the method below.
+    //   new Chart(donutChartCanvas, {
+    //     type: 'doughnut',
+    //     data: donutData,
+    //     options: donutOptions
+    //   })
+  
+      //-------------
+      //- PIE CHART -
+      //-------------
+      // Get context with jQuery - using jQuery's .get() method.
+      var pieChartCanvas = $('#pieChart').get(0).getContext('2d')
+      var pieData        = donutData;
+      var pieOptions     = {
+        maintainAspectRatio : false,
+        responsive : true,
+      }
+      //Create pie or douhnut chart
+      // You can switch between pie and douhnut using the method below.
+      new Chart(pieChartCanvas, {
+        type: 'pie',
+        data: pieData,
+        options: pieOptions
+      })
+  
+      //-------------
+      //- BAR CHART -
+      //-------------
+    //   var barChartCanvas = $('#barChart').get(0).getContext('2d')
+      var barChartData = $.extend(true, {}, areaChartData)
+      var temp0 = areaChartData.datasets[0]
+      var temp1 = areaChartData.datasets[1]
+      barChartData.datasets[0] = temp1
+      barChartData.datasets[1] = temp0
+  
+      var barChartOptions = {
+        responsive              : true,
+        maintainAspectRatio     : false,
+        datasetFill             : false
+      }
+  
+    //   new Chart(barChartCanvas, {
+    //     type: 'bar',
+    //     data: barChartData,
+    //     options: barChartOptions
+    //   })
+  
+      //---------------------
+      //- STACKED BAR CHART -
+      //---------------------
+      var stackedBarChartCanvas = $('#stackedBarChart').get(0).getContext('2d')
+      var stackedBarChartData = $.extend(true, {}, barChartData)
+  
+      var stackedBarChartOptions = {
+        responsive              : true,
+        maintainAspectRatio     : false,
+        scales: {
+          xAxes: [{
+            stacked: true,
+          }],
+          yAxes: [{
+            stacked: true
+          }]
+        }
+      }
+  
+      new Chart(stackedBarChartCanvas, {
+        type: 'bar',
+        data: stackedBarChartData,
+        options: stackedBarChartOptions
+      })
+    })
+</script>

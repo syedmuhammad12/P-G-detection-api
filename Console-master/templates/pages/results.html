@@ -1,0 +1,96 @@
+{% include "layouts/header.html" %}
+
+<div class="card">
+    <!-- <div class="card-header" style="padding-bottom: 0px;"> -->
+        <!-- <div class="row" style="padding: 0px;"> -->
+
+        <!-- <div class="col-sm-3">
+            <div class="form-group">
+                <div class="input-group">
+                    <label>From</label>
+                </div>
+                <div class="input-group mb-3">
+                    <input class="form-control" type="datetime-local">
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <div class="form-group">
+                <div class="input-group">
+                    <label>To</label>
+                </div>
+                <div class="input-group mb-3">
+                    <input class="form-control" type="datetime-local">
+                </div>
+            </div>
+        </div> -->
+
+        <!-- </div>
+    </div> -->
+    <!-- /.card-header -->
+    <div class="card-body">
+      <table id="example1" class="table table-bordered table-striped">
+        <thead>
+        <tr>
+          <th>Bottle ID</th>
+          <th>Result</th>
+          <th>Examined At</th>
+        </tr>
+        </thead>
+        <tbody>
+            {% for bottle in bottles %}
+            <tr>
+              <td onclick="show_details('{{ bottle.id }}')">{{ bottle.id }}</td>
+              <td onclick="show_details('{{ bottle.id }}')">{{ bottle.result }}</td>
+              <td onclick="show_details('{{ bottle.id }}')">{{ bottle.created_at }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <!-- <tfoot>
+        <tr>
+          <th>Rendering engine</th>
+          <th>Browser</th>
+          <th>Platform(s)</th>
+          <th>Engine version</th>
+          <th>CSS grade</th>
+        </tr>
+        </tfoot> -->
+      </table>
+    </div>
+    <!-- /.card-body -->
+  </div>
+  <!-- /.card -->
+
+{% include "pages/results_modal.html" %}
+
+{% include "layouts/footer.html" %}
+
+
+<script>
+    $(function () {
+      $("#example1").DataTable({
+        "responsive": true, "lengthChange": false, "autoWidth": false,
+        "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
+      }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
+    });
+
+    function show_details(bottle_id){
+      $.ajaxSetup({
+          data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+      });
+      $.ajax({
+          type: 'POST',
+          url: "{% url 'get_bottle_details' %}",
+          data: {"bottle_id": bottle_id},
+          success: function (response) {
+            $('#result_modal_body').html(response);
+            $('#modal-result').modal('toggle');
+          },
+          error: function (response) {
+              // alert(response["responseJSON"]["error"]);
+              // $('#loader').modal('hide');
+          }
+      });
+    }
+  </script>
