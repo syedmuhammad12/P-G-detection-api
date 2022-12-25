@@ -199,7 +199,7 @@ function captureImage(obj) {
             console.log("width: "+canvas.width+" , height: "+ canvas.height)
 
             // draw the video at that frame
-            canvas.getContext('2d').drawImage(video, 0, 0, 224, 224);
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
 
             // convert it to a usable data URL
             const dataURL = canvas.toDataURL();
@@ -213,10 +213,10 @@ function captureImage(obj) {
         data: {"img": dataURL},
         success: (response) => {
             
-            //$('#result_modal_body').html(response);
-            //$('#modal-result').modal('toggle');
+            $('#result_modal_body').html(response);
+            $('#modal-result').modal('toggle');
             
-            alert(response.defect_result);
+            //alert(response.defect_result);
 
         },
         error: function (response) {

@@ -5,14 +5,16 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
-import skimage
-import wget
+import matplotlib.pyplot as plt
 from dateutil.relativedelta import relativedelta
 from datetime import datetime, timedelta
 import random
 import urllib
 import string
 import base64
+from io import BytesIO
+from PIL import Image
+from PIL.Image import Resampling
 from tensorflow.keras.models import load_model
 from django.conf import settings
 import serial
@@ -390,23 +392,37 @@ def save_img_on_server(request):
 
 def img_model_inspect(request):
     
-    f = urllib.request.urlopen(request.POST.get('img'))
-    myfile = f.read()
-    r = base64.decodebytes(myfile)
-    q = np.frombuffer(r, dtype="uint8")
-    img = q.astype(np.float32)
-    img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
-    img = cv2.resize(img, (224, 224), 3)
+    
+    offset = request.POST.get('img').index(',') + 1
+    img_bytes = base64.b64decode(request.POST.get('img')[offset:])
+    img = Image.open(BytesIO(img_bytes))
+    # img = img.resize((224, 224), Resampling.HAMMING)
+    img  = np.array(img)
+    img = cv2.resize(img.astype("uint8"), (224, 224))
+    img = cv2.cvtColor(img, cv2.COLOR_RGBA2RGB)
+
+    # img = img.astype(np.float32)
+    # img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
+    # img = cv2.resize(img, (224, 224), 3)
+    # img = np.array(list(reversed(img)))
+    # img = img.astype("float32")
+    image = plt.imshow(img)
+    plt.plot()
+    plt.show()
     # print("start")
     # np_img = np.array(myfile)
     # img = cv2.resize(q, (224, 224))
-    model = load_model('../mobilenetV2_original.h5')
+    # print(os.listdir("../"))
+    model = load_model('./mobilenetV2_original.h5')
     img = img / 255.0
-    
+    # img = cv2.resize(img, dsize=(224, 224), interpolation=cv2.INTER_CUBIC)
     img = img.reshape(1,224,224, 3)
+
+
     label = model.predict(img)
     p=np.argmax(label)
     paras = {0: "acceptable", 1: "marginal", 2: "unacceptable"}
     par = {0:"cap", 1: "bottle", 2:"dent"}
+    print(p)
     params = {"defect_name": par[p], "defect_result": paras[p]}
     return render(request, "pages/result_modal_body.html", params)
